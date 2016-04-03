@@ -1,4 +1,4 @@
-function mapFusion(plotFig)
+%function mapFusion(plotFig)
 if ~exist('plotFig','var') || isempty(plotFig)
     plotFig = false;
 end
@@ -13,11 +13,22 @@ if plotFig
     plot(landmarkGT(:,1),landmarkGT(:,2),'bp');
 end
 numCam = size(landmarkCamera,1);
+numLidar = size(landmarkLidar,1);
 minL = 1.5;% Minimum length between two different features.
 for i = 1:numCam
     temp = (landmarkCamera-repmat(landmarkCamera(i,:),numCam,1)).^2;
-    dist = sum(temp,2);
-    dist(i) = [];
-    indexCam = find(dist < minL)
+    dist = sum(temp,2); % We should calculate Mahalanobis distance later
+    dist(i) = 1e10;
+    indexCam = find(dist < minL);
+    if indexCam
+        % Find the lidar observations that are close to the indexCamth
+        % camera observation
+        for j = 1:length(indexCam)
+            temp = (landmarkLidar-repmat(landmarkCamera(indexCam(j),:),numLidar,1)).^2;
+            dist = sum(temp,2); % We should calculate Mahalanobis distance later
+            indexLidar = find(dist < minL);
+
+        end
+    end
 end
-end
+%end
