@@ -17,7 +17,7 @@ numLidar = size(landmarkLidar,1);
 minL = 1.5;% Minimum length between two different features.
 for i = 1:numCam
     temp = (landmarkCamera-repmat(landmarkCamera(i,:),numCam,1)).^2;
-    dist = sum(temp,2); % We should calculate Mahalanobis distance later
+    dist = sum(temp,2); % We may calculate Mahalanobis distance later
     dist(i) = 1e10;
     indexCam = find(dist < minL);
     if indexCam
@@ -27,7 +27,7 @@ for i = 1:numCam
             temp = (landmarkLidar-repmat(landmarkCamera(indexCam(j),:),numLidar,1)).^2;
             dist = sum(temp,2); % We should calculate Mahalanobis distance later
             indexLidar = find(dist < minL);
-
+            
         end
     end
 end
